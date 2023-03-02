@@ -3,7 +3,7 @@ import controller from "../controllers/Order";
 
 const router = express.Router();
 
-router.post("/new", controller.createOrder);
+router.post("/", controller.createOrder);
 router.get("/", controller.readAllOrders);
 router.get("/:orderId", controller.readOrder);
 router.patch("/:orderId/edit", controller.updateOrder);
