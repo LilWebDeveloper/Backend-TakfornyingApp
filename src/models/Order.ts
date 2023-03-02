@@ -18,7 +18,7 @@ const OrderSchema: Schema = new Schema(
     roofSize: { type: Number, require: true },
     roofAngle: { type: Number, require: true },
     description: { type: String, require: true },
-    worker: { type: Schema.Types.ObjectId, require: true, ref: "Employee" },
+    worker: { type: Schema.Types.ObjectId, ref: "Employee" },
   },
   {
     timestamps: true,
