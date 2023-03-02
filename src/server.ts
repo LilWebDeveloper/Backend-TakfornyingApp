@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { config } from "./config/config";
 import Logging from "./library/Logging";
 import employeeRoutes from "./routes/Employee";
-
+import orderRoutes from "./routes/Order";
 const router = express();
 
 /** Connect to Mango */
@@ -60,6 +60,7 @@ const StartServer = () => {
 
   /** Routes */
   router.use("/employees", employeeRoutes);
+  router.use("/orders", orderRoutes);
 
   /** Healthcheck */
   router.get("/ping", (req, res, next) =>
