@@ -27,6 +27,7 @@ const readOrder = (req: Request, res: Response, next: NextFunction) => {
 
   return Order.findById(orderId)
     .populate("worker")
+    .select('-__v')
     .then((order) =>
       order
         ? res.status(200).json({ order })
@@ -38,6 +39,7 @@ const readOrder = (req: Request, res: Response, next: NextFunction) => {
 const readAllOrders = (req: Request, res: Response, next: NextFunction) => {
   return Order.find()
     .populate("worker")
+    .select('-__v')
     .then((orders) => res.status(200).json({ orders }))
     .catch((error) => res.status(500).json({ error }));
 };
