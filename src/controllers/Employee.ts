@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import Employee from "../models/Employee";
+import bcrypt from 'bcrypt'
 
-const createEmployee = (req: Request, res: Response, next: NextFunction) => {
+const createEmployee = async(req: Request, res: Response, next: NextFunction) => {
   const { firstName, secondName, jobPosition, dNumber, login, password } =
     req.body;
+
+    const passwordHashed = await bcrypt.hash(password, 10)
 
   const employee = new Employee({
     _id: new mongoose.Types.ObjectId(),
@@ -13,7 +16,7 @@ const createEmployee = (req: Request, res: Response, next: NextFunction) => {
     jobPosition,
     dNumber,
     login,
-    password,
+    password: passwordHashed,
   });
 
   return employee
