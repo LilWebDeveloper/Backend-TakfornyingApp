@@ -5,6 +5,7 @@ import { config } from "./config/config";
 import Logging from "./library/Logging";
 import employeeRoutes from "./routes/Employee";
 import orderRoutes from "./routes/Order";
+import loginRoutes from "./routes/Login";
 const router = express();
 
 /** Connect to Mango */
@@ -59,6 +60,7 @@ const StartServer = () => {
   });
 
   /** Routes */
+  router.use("/login", loginRoutes);
   router.use("/employees", employeeRoutes);
   router.use("/orders", orderRoutes);
 

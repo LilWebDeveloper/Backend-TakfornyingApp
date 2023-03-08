@@ -1,13 +1,70 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import Employee from "../models/Employee";
-import bcrypt from 'bcrypt'
+import bcrypt from "bcrypt";
+import Logging from "../library/Logging";
+import signJWT from "../functions/signJWT";
 
-const createEmployee = async(req: Request, res: Response, next: NextFunction) => {
+const NAMESPACE = "User";
+
+const validateToken = (req: Request, res: Response, next: NextFunction) => {
+  Logging.info(`${NAMESPACE} Token Validated, user authorized`);
+
+  return res.status(200).json({
+    message: "Authorized",
+  });
+};
+
+const login = (req: Request, res: Response, next: NextFunction) => {
+  let { login, password } = req.body;
+
+  Employee.find({ login })
+    .exec()
+    .then((employees) => {
+      if (employees.length !== 1) {
+        return res.status(401).json({
+          message: "Unauthorized",
+        });
+      }
+
+      bcrypt.compare(password, employees[0].password, (error, result) => {
+        if (error) {
+          Logging.error(`${NAMESPACE} ${error.message} ${error}`);
+
+          return res.status(401).json({
+            message: "Unauthorized",
+          });
+        } else if (result) {
+          signJWT(employees[0], (_error, token) => {
+            if (error) {
+              Logging.error(`${NAMESPACE} Unable to sign token: ${_error}`);
+
+              return res.status(401).json({
+                message: "Unauthorized",
+                error: _error,
+              });
+            } else if (token) {
+              return res.status(200).json({
+                message: "Auth Successful",
+                token,
+                employee: employees[0],
+              });
+            }
+          });
+        }
+      });
+    });
+};
+
+const createEmployee = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { firstName, secondName, jobPosition, dNumber, login, password } =
     req.body;
 
-    const passwordHashed = await bcrypt.hash(password, 10)
+  const passwordHashed = await bcrypt.hash(password, 10);
 
   const employee = new Employee({
     _id: new mongoose.Types.ObjectId(),
@@ -73,6 +130,8 @@ const deleteEmployee = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export default {
+  login,
+  validateToken,
   createEmployee,
   readEmployee,
   readAllEmployees,
