@@ -18,7 +18,7 @@ const EmployeeSchema: Schema = new Schema(
     jobPosition: { type: String, require: true },
     dNumber: { type: Number, require: true,unique: true },
     login: { type: String, require: true, unique: true },
-    password: { type: String, require: true, unique: true },
+    password: { type: String, require: true },
   },
   {
     versionKey: false,
