@@ -23,7 +23,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
     .then((employees) => {
       if (employees.length !== 1) {
         return res.status(401).json({
-          message: "Unauthorized",
+          message: "Enter your login and password",
         });
       }
 
