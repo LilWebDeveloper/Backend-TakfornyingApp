@@ -20,7 +20,7 @@ const signJWT = (
     jwt.sign(
       {
         employeeId: employee.dNumber,
-        employeePermision: employee.jobPosition,
+        employeePermission: employee.jobPosition,
       },
       config.server.token.secret,
       {
@@ -42,4 +42,4 @@ const signJWT = (
   }
 };
 
-export default signJWT
+export default signJWT;
