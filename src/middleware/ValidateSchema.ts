@@ -27,6 +27,14 @@ export const Schemas = {
       login: Joi.string().min(3).max(30).required(),
       password: Joi.string().min(5).max(30).required(),
     }),
+    updateEmployee: Joi.object<IEmployee>({
+      firstName: Joi.string().min(3).max(30).required(),
+      secondName: Joi.string().min(3).max(30).required(),
+      jobPosition: Joi.string().min(3).max(30).required(),
+      dNumber: Joi.string().regex(/^[0-9]{11}$/).messages({'string.pattern.base': `DNumber / Person Number must have 11 digits.`}).required(),
+      login: Joi.string().min(3).max(30).required(),
+      password: Joi.string().min(5).required(),
+    }),
   },
   order: {
     validateOrder: Joi.object<iOrder>({

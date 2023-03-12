@@ -19,7 +19,7 @@ const signJWT = (
   try {
     jwt.sign(
       {
-        employeeId: employee.dNumber,
+        employeeLogin: employee.login,
         employeePermission: employee.jobPosition,
       },
       config.server.token.secret,

@@ -16,7 +16,7 @@ router.get("/:employeeId", extractJWT, controller.readEmployee);
 router.patch(
   "/:employeeId",
   extractJWT,
-  ValidateSchema(Schemas.employee.validateEmployee),
+  ValidateSchema(Schemas.employee.updateEmployee),
   controller.updateEmployee
 );
 router.delete("/:employeeId", extractJWT, controller.deleteEmployee);
