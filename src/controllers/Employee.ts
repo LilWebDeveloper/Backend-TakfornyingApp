@@ -67,7 +67,7 @@ const createEmployee = async (
   const passwordHashed = await bcrypt.hash(password, 10);
 
   const employee = new Employee({
-    _id: new mongoose.Types.ObjectId(),
+    _id: new mongoose.Types.ObjectId().toHexString(),
     firstName,
     secondName,
     jobPosition,

@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 
 export interface IEmployee {
   firstName: string;
@@ -13,6 +13,7 @@ export interface IEmployeeModel extends IEmployee, Document {}
 
 const EmployeeSchema: Schema = new Schema(
   {
+    _id: Types.ObjectId,
     firstName: { type: String, require: true },
     secondName: { type: String, require: true },
     jobPosition: { type: String, require: true },
@@ -22,6 +23,7 @@ const EmployeeSchema: Schema = new Schema(
   },
   {
     versionKey: false,
+    _id: false
   }
 );
 

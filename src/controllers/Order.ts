@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import jwtDecode from "jwt-decode";
 import mongoose from "mongoose";
 import Order from "../models/Order";
 
@@ -27,7 +28,7 @@ const readOrder = (req: Request, res: Response, next: NextFunction) => {
 
   return Order.findById(orderId)
     .populate("worker")
-    .select('-__v')
+    .select("-__v")
     .then((order) =>
       order
         ? res.status(200).json({ order })
@@ -39,7 +40,7 @@ const readOrder = (req: Request, res: Response, next: NextFunction) => {
 const readAllOrders = (req: Request, res: Response, next: NextFunction) => {
   return Order.find()
     .populate("worker")
-    .select('-__v')
+    .select("-__v")
     .then((orders) => res.status(200).json({ orders }))
     .catch((error) => res.status(500).json({ error }));
 };
@@ -73,10 +74,27 @@ const deleteOrder = (req: Request, res: Response, next: NextFunction) => {
   );
 };
 
+const findEmployeeOrders = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token: any = req.headers.authorization;
+  const decode: any = jwtDecode(token);
+  const employeeId = decode.employeeId;
+
+  Order.find({"worker": `${employeeId}`})
+    .populate("worker")
+    .select("-__v")
+    .then((orders) => res.status(200).json({ orders }))
+    .catch((error) => res.status(500).json({ error }));
+};
+
 export default {
   createOrder,
   readOrder,
   readAllOrders,
   updateOrder,
   deleteOrder,
+  findEmployeeOrders
 };

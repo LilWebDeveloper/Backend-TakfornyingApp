@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
 import { config } from "../config/config";
 import Logging from "../library/Logging";
-import { IEmployee } from "../models/Employee";
+import { IEmployee, IEmployeeModel } from "../models/Employee";
 
 const NAMESPACE = "Auth";
 
 const signJWT = (
-  employee: IEmployee,
+  employee: IEmployeeModel,
   callback: (error: Error | null, token: string | null) => void
 ): void => {
   var timeSinchEpoch = new Date().getTime();
@@ -19,6 +19,7 @@ const signJWT = (
   try {
     jwt.sign(
       {
+        employeeId: employee._id,
         employeeLogin: employee.login,
         employeePermission: employee.jobPosition,
       },

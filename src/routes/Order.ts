@@ -5,6 +5,7 @@ import { Schemas, ValidateSchema } from "../middleware/ValidateSchema";
 
 const router = express.Router();
 
+router.get("/employee", extractJWT, controller.findEmployeeOrders);
 router.post(
   "/",
   extractJWT,
