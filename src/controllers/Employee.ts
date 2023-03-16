@@ -47,7 +47,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
               return res.status(200).json({
                 message: "Auth Successful",
                 token,
-                employee: employees[0],
+                employeeId: employees[0]._id,
               });
             }
           });
