@@ -16,7 +16,7 @@ const validateToken = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const login = (req: Request, res: Response, next: NextFunction) => {
-  let { login, password } = req.body;
+  let { login } = req.body;
 
   Employee.find({ login })
     .exec()
@@ -27,7 +27,9 @@ const login = (req: Request, res: Response, next: NextFunction) => {
         });
       }
 
-      bcrypt.compare(password, employees[0].password, (error, result) => {
+      bcrypt.compare(req.body.password, employees[0].password, (error, result) => {
+        console.log(employees[0].password)
+        console.log(req.body.password)
         if (error) {
           Logging.error(`${NAMESPACE} ${error.message} ${error}`);
 
@@ -51,7 +53,9 @@ const login = (req: Request, res: Response, next: NextFunction) => {
               });
             }
           });
-        }
+        } else return res.status(401).json({
+          message: 'Wrong password'
+        })
       });
     });
 };
