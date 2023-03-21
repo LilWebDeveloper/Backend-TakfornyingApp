@@ -48,6 +48,8 @@ const login = (req: Request, res: Response, next: NextFunction) => {
                 message: "Auth Successful",
                 token,
                 employeeId: employees[0]._id,
+                name: employees[0].login,
+                role: employees[0].jobPosition,
               });
             }
           });
