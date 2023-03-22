@@ -2,9 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import jwtDecode from "jwt-decode";
 import mongoose from "mongoose";
 import Order from "../models/Order";
+import BodyType from "../interfaces/BodyType";
+import DecodeTokenType from "../interfaces/DecodeTokenType";
 
 const createOrder = (req: Request, res: Response, next: NextFunction) => {
-  const { address, roofPaint, roofSize, roofAngle, description, worker } =
+  const { address, roofPaint, roofSize, roofAngle, description, worker }: BodyType =
     req.body;
 
   const order = new Order({
@@ -79,8 +81,8 @@ const findEmployeeOrders = (
   res: Response,
   next: NextFunction
 ) => {
-  const token: any = req.headers.authorization;
-  const decode: any = jwtDecode(token);
+  const token = req.headers.authorization!;
+  const decode: DecodeTokenType = jwtDecode(token);
   const employeeId = decode.employeeId;
 
   Order.find({"worker": `${employeeId}`})
