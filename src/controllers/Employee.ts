@@ -27,36 +27,37 @@ const login = (req: Request, res: Response, next: NextFunction) => {
         });
       }
 
-      bcrypt.compare(req.body.password, employees[0].password, (error, result) => {
-        if (error) {
-          Logging.error(`${NAMESPACE} ${error.message} ${error}`);
+      bcrypt.compare(
+        req.body.password,
+        employees[0].password,
+        (error, result) => {
+          if (error) {
+            Logging.error(`${NAMESPACE} ${error.message} ${error}`);
 
-          return res.status(401).json({
-            message: "Unauthorized",
-          });
-        } else if (result) {
-          signJWT(employees[0], (_error, token) => {
-            if (error) {
-              Logging.error(`${NAMESPACE} Unable to sign token: ${_error}`);
+            return res.status(401).json({
+              message: "Unauthorized",
+            });
+          } else if (result) {
+            signJWT(employees[0], (_error, token) => {
+              if (error) {
+                Logging.error(`${NAMESPACE} Unable to sign token: ${_error}`);
 
-              return res.status(401).json({
-                message: "Unauthorized",
-                error: _error,
-              });
-            } else if (token) {
-              return res.status(200).json({
-                message: "Auth Successful",
-                token,
-                employeeId: employees[0]._id,
-                name: employees[0].login,
-                role: employees[0].jobPosition,
-              });
-            }
-          });
-        } else return res.status(401).json({
-          message: 'Wrong password'
-        })
-      });
+                return res.status(401).json({
+                  message: "Unauthorized",
+                  error: _error,
+                });
+              } else if (token) {
+                return res.status(200).json({
+                  token,
+                  employeeId: employees[0]._id,
+                  name: employees[0].login,
+                  role: employees[0].jobPosition,
+                });
+              }
+            });
+          }
+        }
+      );
     });
 };
 
@@ -80,10 +81,12 @@ const createEmployee = async (
     password: passwordHashed,
   });
 
-  return employee
-    .save()
-    .then((employee) => res.status(201).json({ employee }))
-    .catch((error) => res.status(500).json({ error }));
+  setTimeout(() => {
+    return employee
+      .save()
+      .then((employee) => res.status(201).json({ employee }))
+      .catch((error) => res.status(500).json({ error }));
+  }, 2000);
 };
 
 const readEmployee = (req: Request, res: Response, next: NextFunction) => {
@@ -111,11 +114,12 @@ const updateEmployee = (req: Request, res: Response, next: NextFunction) => {
     .then((employee) => {
       if (employee) {
         employee.set(req.body);
-
-        return employee
-          .save()
-          .then((employee) => res.status(201).json({ employee }))
-          .catch((error) => res.status(500).json({ error }));
+        setTimeout(() => {
+          return employee
+            .save()
+            .then((employee) => res.status(201).json({ employee }))
+            .catch((error) => res.status(500).json({ error }));
+        }, 2000);
       } else {
         res.status(404).json({ message: "Employee not found" });
       }
@@ -126,11 +130,13 @@ const updateEmployee = (req: Request, res: Response, next: NextFunction) => {
 const deleteEmployee = (req: Request, res: Response, next: NextFunction) => {
   const employeeId = req.params.employeeId;
 
-  return Employee.findByIdAndDelete(employeeId).then((employee) =>
-    employee
-      ? res.status(201).json({ message: "Employee has been removed" })
-      : res.status(404).json({ message: "Employee not found" })
-  );
+  setTimeout(() => {
+    return Employee.findByIdAndDelete(employeeId).then((employee) =>
+      employee
+        ? res.status(201).json({ message: "Employee has been removed" })
+        : res.status(404).json({ message: "Employee not found" })
+    );
+  }, 2000);
 };
 
 export default {

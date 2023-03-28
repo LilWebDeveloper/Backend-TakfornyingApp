@@ -6,8 +6,14 @@ import BodyType from "../interfaces/BodyType";
 import DecodeTokenType from "../interfaces/DecodeTokenType";
 
 const createOrder = (req: Request, res: Response, next: NextFunction) => {
-  const { address, roofPaint, roofSize, roofAngle, description, worker }: BodyType =
-    req.body;
+  const {
+    address,
+    roofPaint,
+    roofSize,
+    roofAngle,
+    description,
+    worker,
+  }: BodyType = req.body;
 
   const order = new Order({
     _id: new mongoose.Types.ObjectId(),
@@ -19,10 +25,12 @@ const createOrder = (req: Request, res: Response, next: NextFunction) => {
     worker,
   });
 
-  return order
-    .save()
-    .then((order) => res.status(201).json({ order }))
-    .catch((error) => res.status(500).json({ error }));
+  setTimeout(() => {
+    return order
+      .save()
+      .then((order) => res.status(201).json({ order }))
+      .catch((error) => res.status(500).json({ error }));
+  }, 2000);
 };
 
 const readOrder = (req: Request, res: Response, next: NextFunction) => {
@@ -55,10 +63,12 @@ const updateOrder = (req: Request, res: Response, next: NextFunction) => {
       if (order) {
         order.set(req.body);
 
-        return order
-          .save()
-          .then((order) => res.status(201).json({ order }))
-          .catch((error) => res.status(500).json({ error }));
+        setTimeout(() => {
+          return order
+            .save()
+            .then((order) => res.status(201).json({ order }))
+            .catch((error) => res.status(500).json({ error }));
+        }, 2000);
       } else {
         res.status(404).json({ message: "Order not found" });
       }
@@ -69,11 +79,13 @@ const updateOrder = (req: Request, res: Response, next: NextFunction) => {
 const deleteOrder = (req: Request, res: Response, next: NextFunction) => {
   const orderId = req.params.orderId;
 
-  return Order.findByIdAndDelete(orderId).then((order) =>
-    order
-      ? res.status(201).json({ message: "Order has been removed" })
-      : res.status(404).json({ message: "Order not found" })
-  );
+  setTimeout(() => {
+    return Order.findByIdAndDelete(orderId).then((order) =>
+      order
+        ? res.status(201).json({ message: "Order has been removed" })
+        : res.status(404).json({ message: "Order not found" })
+    );
+  }, 2000);
 };
 
 const findEmployeeOrders = (
@@ -85,7 +97,7 @@ const findEmployeeOrders = (
   const decode: DecodeTokenType = jwtDecode(token);
   const employeeId = decode.employeeId;
 
-  Order.find({"worker": `${employeeId}`})
+  Order.find({ worker: `${employeeId}` })
     .populate("worker")
     .select("-__v")
     .then((orders) => res.status(200).json({ orders }))
@@ -98,5 +110,5 @@ export default {
   readAllOrders,
   updateOrder,
   deleteOrder,
-  findEmployeeOrders
+  findEmployeeOrders,
 };
