@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import Employee from "../models/Employee";
 import bcrypt from "bcrypt";
 import Logging from "../library/Logging";
-import signJWT from "../functions/signJWT";
+import signJWT from "../functions/SignJWT";
 
 const NAMESPACE = "User";
 

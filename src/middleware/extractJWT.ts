@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Logging from "../library/Logging";
 import jwt from "jsonwebtoken";
-import { config } from "../config/config";
+import { config } from "../config/Config";
 
 const NAMESPACE = "Auth";
 

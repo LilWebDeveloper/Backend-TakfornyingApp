@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import { config } from "../config/config";
+import { config } from "../config/Config";
 import Logging from "../library/Logging";
-import { IEmployee, IEmployeeModel } from "../models/Employee";
+import { IEmployeeModel } from "../models/Employee";
 
 const NAMESPACE = "Auth";
 

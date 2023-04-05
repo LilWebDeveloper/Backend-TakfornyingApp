@@ -1,6 +1,6 @@
 import express from "express";
 import controller from "../controllers/Employee";
-import extractJWT from "../middleware/extractJWT";
+import extractJWT from "../middleware/ExtractJWT";
 
 const router = express.Router();
 

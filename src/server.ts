@@ -1,7 +1,7 @@
 import express from "express";
 import http from "http";
 import mongoose from "mongoose";
-import { config } from "./config/config";
+import { config } from "./config/Config";
 import Logging from "./library/Logging";
 import employeeRoutes from "./routes/Employee";
 import orderRoutes from "./routes/Order";

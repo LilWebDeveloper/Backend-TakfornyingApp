@@ -1,6 +1,6 @@
 import express from "express";
 import controller from "../controllers/Order";
-import extractJWT from "../middleware/extractJWT";
+import extractJWT from "../middleware/ExtractJWT";
 import { Schemas, ValidateSchema } from "../middleware/ValidateSchema";
 
 const router = express.Router();
