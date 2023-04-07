@@ -24,6 +24,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
       if (employees.length !== 1) {
         return res.status(401).json({
           message: "Enter your login and password",
+          status: 401
         });
       }
 
@@ -52,9 +53,16 @@ const login = (req: Request, res: Response, next: NextFunction) => {
                   employeeId: employees[0]._id,
                   name: employees[0].login,
                   role: employees[0].jobPosition,
+                  status: 200,
+                  message: 'Authorized'
                 });
               }
             });
+          } else {
+            return res.status(401).json({
+              message: 'Wrong Password',
+              status: 401
+            })
           }
         }
       );
