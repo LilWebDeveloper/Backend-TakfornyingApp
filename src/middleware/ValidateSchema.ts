@@ -42,6 +42,8 @@ export const Schemas = {
       roofPaint: Joi.string().min(3).max(20).required(),
       roofSize: Joi.number().required(),
       roofAngle: Joi.number().max(50).required(),
+      lat: Joi.string().required(),
+      lng: Joi.string().required(),
       description: Joi.string().min(3).required(),
       worker: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
