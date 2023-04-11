@@ -11,6 +11,8 @@ const createOrder = (req: Request, res: Response, next: NextFunction) => {
     roofPaint,
     roofSize,
     roofAngle,
+    lat,
+    lng,
     description,
     worker,
   }: BodyType = req.body;
@@ -21,6 +23,8 @@ const createOrder = (req: Request, res: Response, next: NextFunction) => {
     roofPaint,
     roofSize,
     roofAngle,
+    lat,
+    lng,
     description,
     worker,
   });

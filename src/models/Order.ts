@@ -5,6 +5,8 @@ export interface iOrder {
   roofPaint: string;
   roofSize: number;
   roofAngle: number;
+  lat: string;
+  lng: string;
   description: string;
   worker: string;
 }
@@ -17,6 +19,8 @@ const OrderSchema: Schema = new Schema(
     roofPaint: { type: String, require: true },
     roofSize: { type: Number, require: true },
     roofAngle: { type: Number, require: true },
+    lat: {type: String, require: true},
+    lng: {type: String, require: true},
     description: { type: String, require: true },
     worker: { type: Schema.Types.ObjectId, ref: "Employee" },
   },
