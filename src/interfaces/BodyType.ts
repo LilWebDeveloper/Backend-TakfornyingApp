@@ -3,8 +3,8 @@ export default interface BodyType {
     roofPaint: string,
     roofSize: number,
     roofAngle: number,
-    lat: string,
-    lng: string,
+    lat: number,
+    lng: number,
     description: string,
     worker: string
   }
