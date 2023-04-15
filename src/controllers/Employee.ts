@@ -115,13 +115,30 @@ const readAllEmployees = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-const updateEmployee = (req: Request, res: Response, next: NextFunction) => {
+const updateEmployee = async (req: Request, res: Response, next: NextFunction) => {
+  const { firstName, secondName, jobPosition, dNumber, login, password } =
+    req.body;
   const employeeId = req.params.employeeId;
+
+  let passwordHashed = password
+ 
+  if(password.trim().length < 30){
+    passwordHashed = await bcrypt.hash(password, 10);
+  }
+
+  const updateEmployee = { 
+    firstName, 
+    secondName, 
+    jobPosition, 
+    dNumber, 
+    login, 
+    password: passwordHashed 
+  }
 
   return Employee.findById(employeeId)
     .then((employee) => {
       if (employee) {
-        employee.set(req.body);
+        employee.set(updateEmployee);
         setTimeout(() => {
           return employee
             .save()
