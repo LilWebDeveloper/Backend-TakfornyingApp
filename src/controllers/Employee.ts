@@ -110,7 +110,12 @@ const readEmployee = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const readAllEmployees = (req: Request, res: Response, next: NextFunction) => {
+  const page: any = req.query.p || 0
+  const employeePerPage = 3
+
   return Employee.find()
+    .skip(page * employeePerPage)
+    .limit(employeePerPage)
     .then((employees) => res.status(200).json({ employees }))
     .catch((error) => res.status(500).json({ error }));
 };
