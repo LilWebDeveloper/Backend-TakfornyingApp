@@ -24,7 +24,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
       if (employees.length !== 1) {
         return res.status(401).json({
           message: "Enter your login and password",
-          status: 401
+          status: 401,
         });
       }
 
@@ -54,15 +54,15 @@ const login = (req: Request, res: Response, next: NextFunction) => {
                   name: employees[0].login,
                   role: employees[0].jobPosition,
                   status: 200,
-                  message: 'Authorized'
+                  message: "Authorized",
                 });
               }
             });
           } else {
             return res.status(401).json({
-              message: 'Wrong Password',
-              status: 401
-            })
+              message: "Wrong Password",
+              status: 401,
+            });
           }
         }
       );
@@ -109,36 +109,62 @@ const readEmployee = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-const readAllEmployees = (req: Request, res: Response, next: NextFunction) => {
-  const page: any = req.query.p || 0
-  const employeePerPage = 3
+const readAllEmployees = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const page: any = req.query.p || 0;
+  const employeePerPage = 3;
 
-  return Employee.find()
-    .skip(page * employeePerPage)
-    .limit(employeePerPage)
-    .then((employees) => res.status(200).json({ employees }))
-    .catch((error) => res.status(500).json({ error }));
+  
+  try {
+    const skip = (page - 1) * employeePerPage
+    const count = await Employee.estimatedDocumentCount()
+    const employees = await Employee.find().limit(employeePerPage).skip(skip);
+    const pageCount = Math.ceil(count / employeePerPage)
+
+    res.status(200).json({
+      pagination: {
+        count,
+        pageCount
+      },
+      employees,
+    });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+
+  // return Employee.find()
+  //   .skip(page * employeePerPage)
+  //   .limit(employeePerPage)
+  //   .then((employees) => res.status(200).json({ employees }))
+  //   .catch((error) => res.status(500).json({ error }));
 };
 
-const updateEmployee = async (req: Request, res: Response, next: NextFunction) => {
+const updateEmployee = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { firstName, secondName, jobPosition, dNumber, login, password } =
     req.body;
   const employeeId = req.params.employeeId;
 
-  let passwordHashed = password
- 
-  if(password.trim().length < 30){
+  let passwordHashed = password;
+
+  if (password.trim().length < 30) {
     passwordHashed = await bcrypt.hash(password, 10);
   }
 
-  const updateEmployee = { 
-    firstName, 
-    secondName, 
-    jobPosition, 
-    dNumber, 
-    login, 
-    password: passwordHashed 
-  }
+  const updateEmployee = {
+    firstName,
+    secondName,
+    jobPosition,
+    dNumber,
+    login,
+    password: passwordHashed,
+  };
 
   return Employee.findById(employeeId)
     .then((employee) => {
