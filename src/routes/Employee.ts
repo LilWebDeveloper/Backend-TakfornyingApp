@@ -11,7 +11,8 @@ router.post(
   ValidateSchema(Schemas.employee.validateEmployee),
   controller.createEmployee
 );
-router.get("/", extractJWT, controller.readAllEmployees);
+router.get("/", extractJWT, controller.readAllEmployeesPagination);
+router.get("/all", extractJWT, controller.readAllEmployees);
 router.get("/:employeeId", extractJWT, controller.readEmployee);
 router.patch(
   "/:employeeId",

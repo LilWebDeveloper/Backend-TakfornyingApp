@@ -109,37 +109,39 @@ const readEmployee = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-const readAllEmployees = async (
+const readAllEmployeesPagination = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const page: any = req.query.p || 0;
-  const employeePerPage = 3;
+  const page = Number(req.query.p) || 0;
+  const employeesPerPage = 3;
 
-  
   try {
-    const skip = (page - 1) * employeePerPage
-    const count = await Employee.estimatedDocumentCount()
-    const employees = await Employee.find().limit(employeePerPage).skip(skip);
-    const pageCount = Math.ceil(count / employeePerPage)
+    const skip = (page - 1) * employeesPerPage;
+    const count = await Employee.estimatedDocumentCount();
+    const allEmployees = await Employee.find();
+    const employees = await Employee.find().limit(employeesPerPage).skip(skip);
+    const pageCount = Math.ceil(count / employeesPerPage);
 
     res.status(200).json({
       pagination: {
         count,
-        pageCount
+        pageCount,
       },
       employees,
+      allEmployees,
     });
   } catch (error) {
     res.status(500).json({ error });
   }
+};
 
-  // return Employee.find()
-  //   .skip(page * employeePerPage)
-  //   .limit(employeePerPage)
-  //   .then((employees) => res.status(200).json({ employees }))
-  //   .catch((error) => res.status(500).json({ error }));
+const readAllEmployees = (req: Request, res: Response, next: NextFunction) => {
+  return Employee.find()
+    .select("-__v")
+    .then((employees) => res.status(200).json({ employees }))
+    .catch((error) => res.status(500).json({ error }));
 };
 
 const updateEmployee = async (
@@ -201,6 +203,7 @@ export default {
   createEmployee,
   readEmployee,
   readAllEmployees,
+  readAllEmployeesPagination,
   updateEmployee,
   deleteEmployee,
 };

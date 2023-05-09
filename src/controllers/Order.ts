@@ -51,12 +51,26 @@ const readOrder = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-const readAllOrders = (req: Request, res: Response, next: NextFunction) => {
-  return Order.find()
-    .populate("worker")
-    .select("-__v")
-    .then((orders) => res.status(200).json({ orders }))
-    .catch((error) => res.status(500).json({ error }));
+const readAllOrders = async (req: Request, res: Response, next: NextFunction) => {
+  const page = Number(req.query.p) || 0;
+  const ordersPerPage = 3;
+
+  try {
+    const skip = (page - 1) * ordersPerPage;
+    const count = await Order.estimatedDocumentCount();
+    const orders = await Order.find().limit(ordersPerPage).skip(skip);
+    const pageCount = Math.ceil(count / ordersPerPage);
+
+    res.status(200).json({
+      pagination: {
+        count,
+        pageCount,
+      },
+      orders,
+    });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
 
 const updateOrder = (req: Request, res: Response, next: NextFunction) => {
