@@ -51,7 +51,7 @@ const readOrder = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-const readAllOrders = async (req: Request, res: Response, next: NextFunction) => {
+const readAllOrdersPagination = async (req: Request, res: Response, next: NextFunction) => {
   const page = Number(req.query.p) || 0;
   const ordersPerPage = 3;
 
@@ -72,6 +72,14 @@ const readAllOrders = async (req: Request, res: Response, next: NextFunction) =>
     res.status(500).json({ error });
   }
 };
+
+const readAllOrders = async (req: Request, res: Response, next: NextFunction) => {
+  return Order.find()
+    .populate("worker")
+    .select("-__v")
+    .then((orders) => res.status(200).json({ orders }))
+    .catch((error) => res.status(500).json({ error }));
+}
 
 const updateOrder = (req: Request, res: Response, next: NextFunction) => {
   const orderId = req.params.orderId;
@@ -126,6 +134,7 @@ export default {
   createOrder,
   readOrder,
   readAllOrders,
+  readAllOrdersPagination,
   updateOrder,
   deleteOrder,
   findEmployeeOrders,

@@ -12,7 +12,8 @@ router.post(
   ValidateSchema(Schemas.order.validateOrder),
   controller.createOrder
 );
-router.get("/", extractJWT, controller.readAllOrders);
+router.get("/", extractJWT, controller.readAllOrdersPagination);
+router.get("/all", extractJWT, controller.readAllOrders);
 router.get("/:orderId", extractJWT, controller.readOrder);
 router.patch(
   "/:orderId",
