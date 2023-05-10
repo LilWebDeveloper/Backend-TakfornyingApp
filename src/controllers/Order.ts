@@ -51,7 +51,11 @@ const readOrder = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-const readAllOrdersPagination = async (req: Request, res: Response, next: NextFunction) => {
+const readAllOrdersPagination = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const page = Number(req.query.p) || 0;
   const ordersPerPage = 3;
 
@@ -73,13 +77,17 @@ const readAllOrdersPagination = async (req: Request, res: Response, next: NextFu
   }
 };
 
-const readAllOrders = async (req: Request, res: Response, next: NextFunction) => {
+const readAllOrders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   return Order.find()
     .populate("worker")
     .select("-__v")
     .then((orders) => res.status(200).json({ orders }))
     .catch((error) => res.status(500).json({ error }));
-}
+};
 
 const updateOrder = (req: Request, res: Response, next: NextFunction) => {
   const orderId = req.params.orderId;
@@ -114,7 +122,7 @@ const deleteOrder = (req: Request, res: Response, next: NextFunction) => {
   }, 2000);
 };
 
-const findEmployeeOrders = (
+const findEmployeeOrdersPagination = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -123,6 +131,38 @@ const findEmployeeOrders = (
   const decode: DecodeTokenType = jwtDecode(token);
   const employeeId = decode.employeeId;
 
+  const page = Number(req.query.p) || 0;
+  const ordersPerPage = 3;
+
+  try {
+    const skip = (page - 1) * ordersPerPage;
+    const allOrders = await Order.find({ worker: `${employeeId}`})
+    const orders = await Order.find({ worker: `${employeeId}` })
+      .limit(ordersPerPage)
+      .skip(skip);
+    const count = allOrders.length
+    const pageCount = Math.ceil(count / ordersPerPage);
+
+    res.status(200).json({
+      pagination: {
+        count,
+        pageCount,
+      },
+      orders,
+    });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+const findEmployeeOrders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = req.headers.authorization!;
+  const decode: DecodeTokenType = jwtDecode(token);
+  const employeeId = decode.employeeId;
   Order.find({ worker: `${employeeId}` })
     .populate("worker")
     .select("-__v")
@@ -138,4 +178,5 @@ export default {
   updateOrder,
   deleteOrder,
   findEmployeeOrders,
+  findEmployeeOrdersPagination,
 };
