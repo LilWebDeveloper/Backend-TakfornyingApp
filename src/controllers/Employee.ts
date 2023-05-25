@@ -197,6 +197,15 @@ const deleteEmployee = (req: Request, res: Response, next: NextFunction) => {
   }, 2000);
 };
 
+const findEmployee = (req: Request, res: Response, next: NextFunction) => {
+  const w = req.query.w;
+
+  return Employee.find({secondName: w})
+    .select("-__v")
+    .then((employees) => res.status(200).json( employees ))
+    .catch((error) => res.status(500).json({ error }));
+};
+
 export default {
   login,
   validateToken,
@@ -206,4 +215,5 @@ export default {
   readAllEmployeesPagination,
   updateEmployee,
   deleteEmployee,
+  findEmployee,
 };

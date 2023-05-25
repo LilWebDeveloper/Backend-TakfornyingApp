@@ -13,6 +13,7 @@ router.post(
 );
 router.get("/", extractJWT, controller.readAllEmployeesPagination);
 router.get("/all", extractJWT, controller.readAllEmployees);
+router.get("/find", extractJWT, controller.findEmployee);
 router.get("/:employeeId", extractJWT, controller.readEmployee);
 router.patch(
   "/:employeeId",
