@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "build": "rm -rf build/ && tsc",
+    "build": "tsc --build",
     "start": "node build/server.js"
   },
   "keywords": [],

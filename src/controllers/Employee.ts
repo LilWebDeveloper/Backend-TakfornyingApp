@@ -200,7 +200,11 @@ const deleteEmployee = (req: Request, res: Response, next: NextFunction) => {
 const findEmployee = (req: Request, res: Response, next: NextFunction) => {
   const w = req.query.w;
 
-  return Employee.find({secondName: w})
+    Employee.find({
+      secondName: {
+        $regex: new RegExp(w as string)
+      }
+    })
     .select("-__v")
     .then((employees) => res.status(200).json( employees ))
     .catch((error) => res.status(500).json({ error }));
