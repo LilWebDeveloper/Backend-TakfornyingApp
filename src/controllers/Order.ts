@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import Order from "../models/Order";
 import BodyType from "../interfaces/BodyType";
 import DecodeTokenType from "../interfaces/DecodeTokenType";
+import Employee from "./Employee";
 
 const createOrder = (req: Request, res: Response, next: NextFunction) => {
   const {
@@ -82,9 +83,12 @@ const readAllOrders = async (
   res: Response,
   next: NextFunction
 ) => {
-  return Order.find()
-    .populate("worker")
-    .select("-__v")
+  const employeeId = req.query.empId;
+
+  return Order.find({"worker": employeeId})
+  .limit(3)
+    // .populate("worker")
+    // .select("-__v")
     .then((orders) => res.status(200).json({ orders }))
     .catch((error) => res.status(500).json({ error }));
 };
@@ -136,11 +140,11 @@ const findEmployeeOrdersPagination = async (
 
   try {
     const skip = (page - 1) * ordersPerPage;
-    const allOrders = await Order.find({ worker: `${employeeId}`})
+    const allOrders = await Order.find({ worker: `${employeeId}` });
     const orders = await Order.find({ worker: `${employeeId}` })
       .limit(ordersPerPage)
       .skip(skip);
-    const count = allOrders.length
+    const count = allOrders.length;
     const pageCount = Math.ceil(count / ordersPerPage);
 
     res.status(200).json({
